@@ -1,0 +1,23 @@
+# Python artifacts
+__pycache__/
+*.py[cod]
+*.egg-info/
+.mypy_cache/
+.pytest_cache/
+
+# Local DB (SQLite fallback) — never commit
+*.db
+*.sqlite3
+
+# Local uploads & env
+uploads/
+.env
+.env.local
+
+# Virtual envs
+venv/
+.venv/
+.env.production
+.env.*
+
+!.env.example

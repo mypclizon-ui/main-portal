@@ -1,0 +1,28 @@
+# Render Blueprint — one-click deploy for the main-portal backend.
+# This file lets you create the web service + Postgres database together
+# from the Render dashboard (New -> Blueprint) or the Render CLI.
+services:
+  - type: web
+    name: bdgc-main-api
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: bdgc-main-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ALGORITHM
+        value: HS256
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        value: "1440"
+      - key: UPLOAD_DIR
+        value: /tmp/uploads
+
+databases:
+  - name: bdgc-main-db
+    plan: free
