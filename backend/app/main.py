@@ -25,17 +25,24 @@ Base.metadata.create_all(bind=engine)
 app = FastAPI(title="BD Garments Career — Main Portal API")
 
 # Allow the Next.js frontend (and the legacy WordPress site) to call us.
-# Local development origins plus your production domains.
+# The frontend origin is configurable via CORS_ORIGINS in the environment
+# (comma-separated). Defaults cover local dev + the known production hosts.
+import os as _os
+_default_origins = [
+    "http://localhost:3000",
+    "http://localhost:8080",
+    "http://localhost:8000",
+    "https://www.bdgarmentscareer.com",
+    "https://bdgarmentscareer.com",
+    "https://api.bdgarmentscareer.com",
+    "https://main-portal-rho.vercel.app",
+]
+_cors_str = _os.getenv("CORS_ORIGINS", ",".join(_default_origins))
+_origins = [o.strip() for o in _cors_str.split(",") if o.strip()]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",
-        "http://localhost:8080",
-        "http://localhost:8000",
-        "https://www.bdgarmentscareer.com",
-        "https://bdgarmentscareer.com",
-        "https://api.bdgarmentscareer.com",
-    ],
+    allow_origins=_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -270,6 +277,19 @@ def jobs_filters(db: Session = Depends(get_db)):
         "categories": distinct(models.Job.category),
         "locations": distinct(models.Job.location),
         "types": distinct(models.Job.job_type),
+    }
+
+
+@app.get("/stats")
+def stats(db: Session = Depends(get_db)):
+    """Public stats: live counts from the real database."""
+    jobs = db.query(models.Job).filter(models.Job.is_active == True).count()  # noqa: E712
+    users = db.query(models.User).count()
+    applications = db.query(models.Application).count()
+    return {
+        "jobs": jobs,
+        "users": users,
+        "applications": applications,
     }
 
 
