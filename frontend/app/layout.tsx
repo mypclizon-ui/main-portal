@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Header from "./components/Header";
+import Footer from "./components/Footer";
 import PageWrapper from "./components/PageWrapper";
+import ChatPopup from "./components/ChatPopup";
+import CookiesConsent from "./components/CookiesConsent";
 
 export const metadata: Metadata = {
   title: "BD Garments Career — Job Portal",
@@ -18,11 +21,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <Header />
         <PageWrapper>{children}</PageWrapper>
-        <footer className="site-footer">
-          <div className="container" style={{ paddingBlock: "1.6rem", textAlign: "center", color: "var(--ink-soft)", fontSize: "0.92rem" }}>
-            © {new Date().getFullYear()} BD Garments Career. All rights reserved.
-          </div>
-        </footer>
+        <Footer />
+        <ChatPopup />
+        <CookiesConsent />
       </body>
     </html>
   );

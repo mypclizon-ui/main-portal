@@ -141,3 +141,10 @@ button { font-family: inherit; cursor: pointer; }
 @media (max-width: 720px) { .jobs-grid, .auth-grid { grid-template-columns: 1fr; } .nav { gap: 1rem; } }
 
 .site-footer { background: var(--brand-deep); color: rgba(255,255,255,0.8); }
+.site-footer a { color: rgba(255,255,255,0.75); }
+.site-footer a:hover { color: #fff; }
+
+/* Chat popup responsive */
+@media (max-width: 720px) {
+  .chat-window { width: calc(100vw - 32px) !important; margin: 0 16px; }
+}

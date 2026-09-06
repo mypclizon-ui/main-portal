@@ -117,6 +117,11 @@ export async function listJobs(params: Record<string, string> = {}): Promise<Job
   return json<Job[]>(`/jobs${qs ? `?${qs}` : ""}`);
 }
 
+/** Live portal stats (job count, user count, applications) from the DB. */
+export async function getStats(): Promise<{ jobs: number; users: number; applications: number }> {
+  return json("/stats");
+}
+
 export async function createJob(payload: Partial<Job> & { title: string }): Promise<Job> {
   return json<Job>("/jobs", {
     method: "POST",
